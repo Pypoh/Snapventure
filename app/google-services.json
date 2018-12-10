@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "702599640025",
+    "firebase_url": "https://snapventure-a123.firebaseio.com",
+    "project_id": "snapventure-a123",
+    "storage_bucket": "snapventure-a123.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702599640025:android:21db643b4912abbf",
+        "android_client_info": {
+          "package_name": "com.raion.snapventure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702599640025-mapcnq6t42iv2p3k8a1bstarj9s34abh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raion.snapventure",
+            "certificate_hash": "439530d1ccb9e37353f223aa95a5f149d9bc29d3"
+          }
+        },
+        {
+          "client_id": "702599640025-d5tvfq0bah9tpjcth31re7fccqr0j8a1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz_8driTKZIa06-2vFf47LjtyYgMqBN1Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702599640025-d5tvfq0bah9tpjcth31re7fccqr0j8a1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
