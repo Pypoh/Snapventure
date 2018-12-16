@@ -1,4 +1,4 @@
-package com.raion.snapventure;
+package com.raion.snapventure.Auth;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.raion.snapventure.Data.User;
+import com.raion.snapventure.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

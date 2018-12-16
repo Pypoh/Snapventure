@@ -46,7 +46,6 @@ dependencies {
     implementation 'com.otaliastudios:cameraview:1.6.0'
 
     //Textfield
-    implementation 'com.github.florent37:materialtextfield:1.0.7'
     implementation 'com.github.HITGIF:TextFieldBoxes:1.4.4'
 
     //Button Progress
