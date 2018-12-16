@@ -51,5 +51,10 @@ dependencies {
     //Button Progress
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
 
+    //Page View
+    implementation ('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
+        transitive = true
+    }
+
 }
 apply plugin: 'com.google.gms.google-services'
