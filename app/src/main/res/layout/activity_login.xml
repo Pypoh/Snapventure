@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/img_logo_login"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logosnapventure"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/img_logo_login">
+
+        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+            android:layout_marginTop="30dp"
+            android:id="@+id/form_email_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:labelText="Email"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            app:secondaryColor="@color/colorPrimary"
+            app:hasFocus="false"
+            app:iconSignifier="@drawable/baseline_email_black_24"
+            android:layout_marginLeft="25dp">
+
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                android:id="@+id/input_email_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+            android:id="@+id/form_password_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:labelText="Password"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/form_email_login"
+            app:iconSignifier="@drawable/baseline_lock_black_24"
+            app:secondaryColor="@color/colorPrimary">
+
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                android:id="@+id/input_password_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+        <com.dd.processbutton.iml.ActionProcessButton
+            android:id="@+id/btn_SignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_marginBottom="30dp"
+            android:text="Login"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/form_password_login"
+            app:pb_colorComplete="@color/colorPrimary"
+            app:pb_colorError="@color/red_error"
+            app:pb_colorNormal="@color/colorPrimary"
+            app:pb_colorPressed="@color/colorPrimary"
+            app:pb_colorProgress="@color/colorAccent"
+            app:pb_textComplete="Success"
+            app:pb_textError="Error"
+            app:pb_textProgress="Loading" />
+
+        <TextView
+            android:id="@+id/to_signUp_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Don't have an account yet? Sing Up Here"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_SignIn" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
