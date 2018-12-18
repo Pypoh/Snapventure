@@ -21,13 +21,11 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".Auth.RegisterActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".CameraViewActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name=".GardenStageActivity"></activity>
     </application>
 
 </manifest>

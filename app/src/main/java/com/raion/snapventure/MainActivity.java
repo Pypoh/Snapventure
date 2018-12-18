@@ -27,32 +27,15 @@ public class MainActivity extends AppCompatActivity {
         ultraViewPager = findViewById(R.id.menu_stage);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
 
-        //initialize built-in indicator
-        ultraViewPager.initIndicator();
-        //set style of indicators
-        ultraViewPager.getIndicator()
-                .setOrientation(UltraViewPager.Orientation.HORIZONTAL)
-                .setFocusColor(Color.GREEN)
-                .setNormalColor(Color.WHITE)
-                .setRadius((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()));
-
-        //set the alignment
-        ultraViewPager.getIndicator().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        //construct built-in indicator, and add it to  UltraViewPager
-        ultraViewPager.getIndicator().build();
-
-        //set an infinite loop
-        //ultraViewPager.setInfiniteLoop(true);
-
         //Initialize UltraPagerAdapter
         PagerAdapter adapter = new UltraPagerAdapter(true);
         ultraViewPager.setAdapter(adapter);
         ultraViewPager.setMultiScreen(0.6f);
-//        ultraViewPager.setItemRatio(1.0f);
-//        ultraViewPager.setRatio(2.0f);
-//        ultraViewPager.setMaxHeight(800);
-//        ultraViewPager.setAutoMeasureHeight(true);
         ultraViewPager.setPageTransformer(false, new UltraDepthScaleTransformer());
+        //ultraViewPager.setCurrentItem(2);
+
+
+
 
     }
 

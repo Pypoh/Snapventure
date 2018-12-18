@@ -7,12 +7,19 @@
     tools:context=".CameraViewActivity">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="75dp"
+        android:layout_width="150dp"
         android:layout_height="75dp"
         android:translationZ="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/half_circle"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <ImageView
             android:layout_width="50dp"

@@ -1,5 +1,6 @@
 package com.raion.snapventure;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by mikeafc on 15/11/26.
@@ -31,17 +33,27 @@ public class UltraPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(final ViewGroup container, final int position) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(container.getContext()).inflate(R.layout.stages, null);
         //new LinearLayout(container.getContext());
         TextView textView = (TextView) linearLayout.findViewById(R.id.stage_text);
         textView.setText(position + "");
 
-//        switch (position) {
-//            case 0:
-//
-//        }
+
         linearLayout.setBackgroundResource(R.drawable.garden);
+        //Set Click
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(container.getContext(), "Page : " + position, Toast.LENGTH_SHORT).show();
+
+                switch (position) {
+                    case 0:
+                        Intent toGarden = new Intent(container.getContext(), GardenStageActivity.class);
+                        container.getContext().startActivity(toGarden);
+                }
+            }
+        });
 
 
         container.addView(linearLayout);
@@ -55,4 +67,6 @@ public class UltraPagerAdapter extends PagerAdapter {
         LinearLayout view = (LinearLayout) object;
         container.removeView(view);
     }
+
+
 }
