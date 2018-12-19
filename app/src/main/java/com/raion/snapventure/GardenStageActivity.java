@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 public class GardenStageActivity extends AppCompatActivity {
 
+    private static final String KEY_STAGE = "garden";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +25,8 @@ public class GardenStageActivity extends AppCompatActivity {
                 Toast.makeText(GardenStageActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
     }
 }

@@ -14,7 +14,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return 9;
+        return 6;
 //        return mThumbIds.length;
     }
 

@@ -24,7 +24,7 @@ public class UltraPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -37,7 +37,18 @@ public class UltraPagerAdapter extends PagerAdapter {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(container.getContext()).inflate(R.layout.stages, null);
         //new LinearLayout(container.getContext());
         TextView textView = (TextView) linearLayout.findViewById(R.id.stage_text);
-        textView.setText(position + "");
+
+        switch (position) {
+            case 0:
+                textView.setText("Garden");
+                break;
+            case 1:
+                textView.setText("Classroom");
+                break;
+            case 2:
+                textView.setText("House");
+                break;
+        }
 
 
         linearLayout.setBackgroundResource(R.drawable.garden);
