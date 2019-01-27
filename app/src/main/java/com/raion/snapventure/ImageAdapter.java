@@ -14,7 +14,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return 9;
+        return 6;
 //        return mThumbIds.length;
     }
 
@@ -32,7 +32,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             //imageView.setPadding(15, 15, 15, 15);
         } else {

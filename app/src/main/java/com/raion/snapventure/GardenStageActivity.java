@@ -1,5 +1,6 @@
 package com.raion.snapventure;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,8 @@ public class GardenStageActivity extends AppCompatActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GardenStageActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(GardenStageActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),CameraViewActivity.class));
             }
         });
 

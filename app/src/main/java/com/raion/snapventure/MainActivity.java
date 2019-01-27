@@ -1,16 +1,23 @@
 package com.raion.snapventure;
 
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.mingle.sweetpick.CustomDelegate;
+import com.mingle.sweetpick.SweetSheet;
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.tmall.ultraviewpager.UltraViewPagerAdapter;
 import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
@@ -18,13 +25,20 @@ import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
 public class MainActivity extends AppCompatActivity {
 
     private UltraViewPager ultraViewPager;
+    private SweetSheet mSweetSheet;
+    private RelativeLayout layout;
+    private Button btnDetect;
+    private ImageView imgBackBlack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        layout = findViewById(R.id.mainLayout);
+        btnDetect = findViewById(R.id.button_detect);
         ultraViewPager = findViewById(R.id.menu_stage);
+        imgBackBlack = findViewById(R.id.home_backBlackImg);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
 
         //Initialize UltraPagerAdapter
@@ -35,9 +49,37 @@ public class MainActivity extends AppCompatActivity {
         //ultraViewPager.setCurrentItem(2);
 
 
+        mSweetSheet = new SweetSheet(layout);
+        CustomDelegate customDelegate = new CustomDelegate(true,
+                CustomDelegate.AnimationType.DuangAnimation);
+        View view = LayoutInflater.from(this).inflate(R.layout.home_custom_sweet_sheet,null);
+        customDelegate.setCustomView(view);
+        mSweetSheet.setDelegate(customDelegate);
 
+        btnDetect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgBackBlack.setVisibility(View.VISIBLE);
+                mSweetSheet.show();
+            }
+        });
+
+        imgBackBlack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgBackBlack.setVisibility(View.GONE);
+            }
+        });
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (mSweetSheet.isShow()){
+            imgBackBlack.setVisibility(View.GONE);
+            mSweetSheet.dismiss();
+        }else {
+            super.onBackPressed();
+        }
+    }
 }

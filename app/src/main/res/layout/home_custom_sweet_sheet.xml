@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/homeSweet_namaTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Arifandis Winata"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/homeSweet_namaTv">
+
+        <ImageView
+            android:id="@+id/homeSweet_energyImg"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_energy"
+            app:layout_constraintEnd_toStartOf="@+id/homeSweet_energyTv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/homeSweet_energyTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:text="5"
+            android:textColor="@color/blue"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@+id/homeSweet_energyImg"
+            app:layout_constraintEnd_toStartOf="@+id/homeSweet_coinImg"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/homeSweet_energyImg" />
+
+        <ImageView
+            android:id="@+id/homeSweet_coinImg"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_coin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/homeSweet_energyTv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/homeSweet_coinTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:text="0"
+            android:textColor="@color/blue"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@+id/homeSweet_coinImg"
+            app:layout_constraintStart_toEndOf="@+id/homeSweet_coinImg"
+            app:layout_constraintTop_toTopOf="@+id/homeSweet_coinImg" />
+
+        <Button
+            android:id="@+id/homeSweet_homeBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:background="@mipmap/ic_home"
+            app:layout_constraintEnd_toStartOf="@+id/homeSweet_aboutBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/homeSweet_energyImg" />
+
+        <Button
+            android:id="@+id/homeSweet_aboutBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_about"
+            app:layout_constraintEnd_toStartOf="@+id/homeSweet_purchaseBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/homeSweet_homeBtn"
+            app:layout_constraintTop_toTopOf="@+id/homeSweet_homeBtn" />
+
+        <Button
+            android:id="@+id/homeSweet_purchaseBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_purchase"
+            app:layout_constraintEnd_toStartOf="@+id/homeSweet_logoutBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/homeSweet_aboutBtn"
+            app:layout_constraintTop_toTopOf="@+id/homeSweet_aboutBtn" />
+
+        <Button
+            android:id="@+id/homeSweet_logoutBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/homeSweet_purchaseBtn"
+            app:layout_constraintTop_toTopOf="@+id/homeSweet_purchaseBtn" />
+
+        <TextView
+            android:id="@+id/homeSweet_homeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Home"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/homeSweet_homeBtn"
+            app:layout_constraintStart_toStartOf="@+id/homeSweet_homeBtn"
+            app:layout_constraintTop_toBottomOf="@+id/homeSweet_homeBtn" />
+
+        <TextView
+            android:id="@+id/homeSweet_aboutTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="About"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/homeSweet_aboutBtn"
+            app:layout_constraintStart_toStartOf="@+id/homeSweet_aboutBtn"
+            app:layout_constraintTop_toBottomOf="@+id/homeSweet_aboutBtn" />
+
+        <TextView
+            android:id="@+id/homeSweet_purchaseTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Purchase"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/homeSweet_purchaseBtn"
+            app:layout_constraintStart_toStartOf="@+id/homeSweet_purchaseBtn"
+            app:layout_constraintTop_toBottomOf="@+id/homeSweet_purchaseBtn" />
+
+        <TextView
+            android:id="@+id/homeSweet_logoutTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Logout"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/homeSweet_logoutBtn"
+            app:layout_constraintStart_toStartOf="@+id/homeSweet_logoutBtn"
+            app:layout_constraintTop_toBottomOf="@+id/homeSweet_logoutBtn" />
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

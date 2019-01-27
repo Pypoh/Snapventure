@@ -24,7 +24,7 @@ public class UltraPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 2;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class UltraPagerAdapter extends PagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(container.getContext()).inflate(R.layout.stages, null);
         //new LinearLayout(container.getContext());
-        TextView textView = (TextView) linearLayout.findViewById(R.id.stage_text);
-        textView.setText(position + "");
+        TextView textView = linearLayout.findViewById(R.id.stage_text);
 
 
-        linearLayout.setBackgroundResource(R.drawable.garden);
+        setBackgroundFromPosition(position,linearLayout,textView);
+//        linearLayout.setBackgroundResource(R.drawable.garden);
         //Set Click
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,5 +68,17 @@ public class UltraPagerAdapter extends PagerAdapter {
         container.removeView(view);
     }
 
+    private void setBackgroundFromPosition(int position,LinearLayout linearLayout, TextView textView){
+        switch (position){
+            case 0:
+                linearLayout.setBackgroundResource(R.drawable.room);
+                textView.setText("Room");
+                break;
+            case 1:
+                linearLayout.setBackgroundResource(R.drawable.garden);
+                textView.setText("Garden");
+                break;
+        }
+    }
 
 }

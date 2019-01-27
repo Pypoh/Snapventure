@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +21,8 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
 import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
+import com.mingle.sweetpick.CustomDelegate;
+import com.mingle.sweetpick.SweetSheet;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraUtils;
 import com.otaliastudios.cameraview.CameraView;
@@ -31,7 +35,9 @@ import java.util.List;
 public class CameraViewActivity extends AppCompatActivity {
 
     CameraView cameraView;
-    Button btnDetect;
+    Button btnDetect,btnHint;
+    SweetSheet mSweetSheet;
+    RelativeLayout layout;
 
     @Override
     protected void onResume() {
@@ -52,17 +58,35 @@ public class CameraViewActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (mSweetSheet.isShow()){
+            mSweetSheet.dismiss();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_view);
 
         cameraView = findViewById(R.id.camera_view);
         btnDetect = findViewById(R.id.button_detect);
+        btnHint = findViewById(R.id.button_hint);
+        layout = findViewById(R.id.cameraLayout);
 
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
         cameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
         cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.CAPTURE); // Long tap to shoot!
+
+        mSweetSheet = new SweetSheet(layout);
+        CustomDelegate customDelegate = new CustomDelegate(true,
+                CustomDelegate.AnimationType.DuangAnimation);
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
+        customDelegate.setCustomView(view);
+        mSweetSheet.setDelegate(customDelegate);
 
         cameraView.addCameraListener(new CameraListener() {
             @Override
@@ -84,6 +108,18 @@ public class CameraViewActivity extends AppCompatActivity {
                 cameraView.capturePicture();
             }
         });
+
+        btnHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mSweetSheet.isShow()){
+                    mSweetSheet.show();
+                }else {
+                    mSweetSheet.dismiss();
+                }
+            }
+        });
+
 
     }
 

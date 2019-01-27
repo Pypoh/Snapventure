@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/signin"
     tools:context=".Auth.RegisterActivity">
 
     <ImageView
@@ -19,22 +19,28 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/sign_up_form"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         android:background="@color/grey"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_logo_signup">
 
         <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
             android:id="@+id/email_form_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
-            app:iconSignifier="@drawable/baseline_email_black_24"
+            android:layout_marginEnd="25dp"
+            app:iconSignifier="@drawable/ic_email_black_24dp"
             app:labelText="Email"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -56,10 +62,10 @@
             android:id="@+id/name_form_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="15dp"
-            app:iconSignifier="@drawable/baseline_perm_identity_black_24"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+
             app:labelText="Name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -81,9 +87,9 @@
             android:id="@+id/password_form_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
             app:iconSignifier="@drawable/baseline_lock_black_24"
             app:labelText="Password"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -105,9 +111,9 @@
             android:id="@+id/confirm_password_form_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
             app:iconSignifier="@drawable/baseline_lock_black_24"
             app:labelText="Confirm Password"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -126,38 +132,37 @@
         </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 
 
-
         <com.dd.processbutton.iml.ActionProcessButton
-        android:id="@+id/btn_SignUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="Sign Up"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirm_password_form_signup"
-        app:pb_colorComplete="@color/colorPrimary"
-        app:pb_colorError="@color/red_error"
-        app:pb_colorNormal="@color/colorPrimary"
-        app:pb_colorPressed="@color/colorPrimary"
-        app:pb_colorProgress="@color/colorAccent"
-        app:pb_textComplete="Success"
-        app:pb_textError="Error"
-        app:pb_textProgress="Loading" />
+            android:id="@+id/btn_SignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_marginTop="20dp"
+            android:text="Sign Up"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/confirm_password_form_signup"
+            app:pb_colorComplete="@color/colorPrimary"
+            app:pb_colorError="@color/red_error"
+            app:pb_colorNormal="@color/colorPrimary"
+            app:pb_colorPressed="@color/colorPrimary"
+            app:pb_colorProgress="@color/colorAccent"
+            app:pb_textComplete="Success"
+            app:pb_textError="Error"
+            app:pb_textProgress="Loading" />
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Already have an account?"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/btn_SignUp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="Already have an account?"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_SignUp" />
 
     </android.support.constraint.ConstraintLayout>
 
