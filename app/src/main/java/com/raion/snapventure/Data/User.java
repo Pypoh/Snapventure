@@ -3,10 +3,29 @@ package com.raion.snapventure.Data;
 public class User {
 
     String email, name;
+    int energy, point;
 
-    public User(String email, String name) {
+    public User(String email, String name, int energy, int point) {
         this.email = email;
         this.name = name;
+        this.energy = energy;
+        this.point = point;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 
     public String getEmail() {

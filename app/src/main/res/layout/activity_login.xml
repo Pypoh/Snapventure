@@ -23,7 +23,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
-        android:background="@color/grey"
+        android:background="@drawable/bg_oval_grey"
         app:layout_constraintTop_toBottomOf="@id/img_logo_login"
         android:elevation="2dp">
 
@@ -38,7 +38,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            app:secondaryColor="@color/colorPrimary"
+            app:secondaryColor="@color/blue"
             app:hasFocus="false"
             app:iconSignifier="@drawable/ic_email_black_24dp"
             android:layout_marginLeft="25dp">
@@ -46,7 +46,10 @@
             <studio.carbonylgroup.textfieldboxes.ExtendedEditText
                 android:id="@+id/input_email_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:inputType="textEmailAddress"
+                android:nextFocusDown="@id/input_password_login"/>
 
         </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 
@@ -62,12 +65,14 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/form_email_login"
             app:iconSignifier="@drawable/baseline_lock_black_24"
-            app:secondaryColor="@color/colorPrimary">
+            app:secondaryColor="@color/blue">
 
             <studio.carbonylgroup.textfieldboxes.ExtendedEditText
                 android:id="@+id/input_password_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:inputType="textPassword"/>
 
         </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 

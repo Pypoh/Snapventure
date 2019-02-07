@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.raion.snapventure.Auth.LoginActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        mAuth = FirebaseAuth.getInstance();
 
         new Thread(new Runnable() {
             @Override
@@ -21,7 +27,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                if (mAuth.getCurrentUser() != null){
+                    intent = new Intent(getApplicationContext(),MainActivity.class);
+                }else {
+                    intent = new Intent(getApplicationContext(),LoginActivity.class);
+                }
                 startActivity(intent);
                 finish();
             }

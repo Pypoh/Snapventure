@@ -1,14 +1,21 @@
 package com.raion.snapventure;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,6 +37,8 @@ import com.otaliastudios.cameraview.Gesture;
 import com.otaliastudios.cameraview.GestureAction;
 import com.raion.snapventure.Helper.InternetCheck;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class CameraViewActivity extends AppCompatActivity {
@@ -38,6 +47,8 @@ public class CameraViewActivity extends AppCompatActivity {
     Button btnDetect,btnHint;
     SweetSheet mSweetSheet;
     RelativeLayout layout;
+    private ProgressBar progressBar;
+    private Dialog trueResultDialog,falseResultDialog;
 
     @Override
     protected void onResume() {
@@ -75,12 +86,16 @@ public class CameraViewActivity extends AppCompatActivity {
         btnDetect = findViewById(R.id.button_detect);
         btnHint = findViewById(R.id.button_hint);
         layout = findViewById(R.id.cameraLayout);
+        progressBar = findViewById(R.id.camera_progressBar);
+
+        
 
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
         cameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
         cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.CAPTURE); // Long tap to shoot!
 
+        trueResultDialog = new Dialog(this);
         mSweetSheet = new SweetSheet(layout);
         CustomDelegate customDelegate = new CustomDelegate(true,
                 CustomDelegate.AnimationType.DuangAnimation);
@@ -124,6 +139,7 @@ public class CameraViewActivity extends AppCompatActivity {
     }
 
     private void runDetector(Bitmap bitmap) {
+        progressBar.setVisibility(View.VISIBLE);
         final FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
 
         new InternetCheck(new InternetCheck.Consumer() {
@@ -177,16 +193,59 @@ public class CameraViewActivity extends AppCompatActivity {
 
     private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
         for (FirebaseVisionCloudLabel label : firebaseVisionCloudLabels) {
-            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
+            if (label.getLabel().equals("Laptop")){
+                progressBar.setVisibility(View.GONE);
+                setupTrueResultDialog("Laptop");
+                trueResultDialog.show();
+            }
         }
 
     }
 
     private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
         for (FirebaseVisionLabel label : firebaseVisionLabels) {
-            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
+            if (label.getLabel().equals("Laptop")){
+                progressBar.setVisibility(View.VISIBLE);
+                setupTrueResultDialog("Laptop");
+                trueResultDialog.show();
+            }
         }
 
+    }
+
+    private void setupTrueResultDialog(String result){
+        trueResultDialog.setContentView(R.layout.dialog_jawaban_benar);
+
+        trueResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        trueResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        TextView tvResult = trueResultDialog.findViewById(R.id.dialogTrue_resultTv);
+        TextView tvNext = trueResultDialog.findViewById(R.id.dialogTrue_nextTv);
+        ImageView imgNext = trueResultDialog.findViewById(R.id.dialogTrue_nextImg);
+
+        tvResult.setText(result);
+        imgNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trueResultDialog.dismiss();
+            }
+        });
+
+        tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trueResultDialog.dismiss();
+            }
+        });
+    }
+
+    private void setupFalseResultDialog(){
+        falseResultDialog.setContentView(R.layout.dialog_jawaban_salah);
+
+        falseResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
 }

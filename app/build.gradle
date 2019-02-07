@@ -60,5 +60,8 @@ dependencies {
     //Android Sweet Sheet
     implementation 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
 
+    //Translate API
+    implementation 'com.google.cloud:google-cloud-translate:1.59.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

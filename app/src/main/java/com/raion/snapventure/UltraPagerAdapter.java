@@ -45,12 +45,15 @@ public class UltraPagerAdapter extends PagerAdapter {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(container.getContext(), "Page : " + position, Toast.LENGTH_SHORT).show();
-
+//                Toast.makeText(container.getContext(), "Page : " + position, Toast.LENGTH_SHORT).show();
                 switch (position) {
                     case 0:
                         Intent toGarden = new Intent(container.getContext(), GardenStageActivity.class);
                         container.getContext().startActivity(toGarden);
+                        break;
+                    case 1:
+                        Toast.makeText(container.getContext(), "Coming Soon", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         });
