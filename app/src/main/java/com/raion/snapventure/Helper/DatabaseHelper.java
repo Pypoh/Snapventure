@@ -98,6 +98,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return dataUserStage;
     }
 
+    public DataUserStage getStageDataByID(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(DataUserStage.TABLE_NAME, new String[]{DataUserStage.COLUMN_ID,
+                DataUserStage.COLUMN_DIFF, DataUserStage.COLUMN_STAGE, DataUserStage.COLUMN_STATUS, DataUserStage.COLUMN_POINT_STATUS,
+                DataUserStage.COLUMN_RIDDLE_EN, DataUserStage.COLUMN_RIDDLE_ID, DataUserStage.COLUMN_ANSWER}, DataUserStage.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        assert cursor != null;
+        DataUserStage dataUserStage = new DataUserStage(cursor.getInt(cursor.getColumnIndex(DataUserStage.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(DataUserStage.COLUMN_DIFF)),
+                cursor.getString(cursor.getColumnIndex(DataUserStage.COLUMN_STAGE)),
+                cursor.getString(cursor.getColumnIndex(DataUserStage.COLUMN_RIDDLE_EN)),
+                cursor.getString(cursor.getColumnIndex(DataUserStage.COLUMN_RIDDLE_ID)),
+                cursor.getString(cursor.getColumnIndex(DataUserStage.COLUMN_ANSWER)),
+                cursor.getInt(cursor.getColumnIndex(DataUserStage.COLUMN_STATUS)),
+                cursor.getInt(cursor.getColumnIndex(DataUserStage.COLUMN_POINT_STATUS)));
+        cursor.close();
+        return dataUserStage;
+    }
+
+    public int setStageStatusByID(int id, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DataUserStage.COLUMN_STATUS, status);
+        return db.update(DataUserStage.TABLE_NAME, values, DataUserStage.COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)});
+    }
+
     public List<DataUserStage> getAllData() {
         List<DataUserStage> dataUserStages = new ArrayList<>();
 
