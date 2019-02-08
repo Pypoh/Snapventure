@@ -59,6 +59,7 @@ public class StageRVAdapter extends RecyclerView.Adapter<StageRVAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 Intent toCamera = new Intent(mContext, CameraViewActivity.class);
+                toCamera.putExtra("STAGE_ID", data.getId());
                 toCamera.putExtra("RIDDLE_EN", data.getRiddleEn());
                 toCamera.putExtra("RIDDLE_ID", data.getRiddleId());
                 toCamera.putExtra("ANSWER", data.getAnswer());

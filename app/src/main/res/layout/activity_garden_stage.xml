@@ -14,7 +14,8 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/main_appBar"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:background="@color/white">
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

@@ -1,6 +1,7 @@
 package com.raion.snapventure;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -60,6 +61,7 @@ public class CameraViewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
     private String RIDDLE_EN, RIDDLE_ID, ANSWER;
+    private int STAGE_ID;
     private TextToSpeech ttsEN,ttsID;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference ref = db.collection("Main");
@@ -90,10 +92,17 @@ public class CameraViewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mSweetSheet.isShow()){
+            ttsID.stop();
+            ttsEN.stop();
             mSweetSheet.dismiss();
         }else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void recreate() {
+        super.recreate();
     }
 
     @Override
@@ -111,6 +120,7 @@ public class CameraViewActivity extends AppCompatActivity {
         // Get Data
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            STAGE_ID = extras.getInt("STAGE_ID");
             RIDDLE_EN = extras.getString("RIDDLE_EN");
             RIDDLE_ID = extras.getString("RIDDLE_ID");
             ANSWER = extras.getString("ANSWER");
@@ -157,9 +167,9 @@ public class CameraViewActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                tts.speak(text,TextToSpeech.QUEUE_FLUSH,null);
                 if (!mSweetSheet.isShow()){
+                    ttsEN.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
                     mSweetSheet.show();
                     riddle_tv.setText(RIDDLE_EN);
-                    ttsID.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
                 }else {
                     ttsID.stop();
                     ttsEN.stop();
@@ -233,25 +243,32 @@ public class CameraViewActivity extends AppCompatActivity {
                 setupTrueResultDialog(ANSWER);
                 trueResultDialog.show();
                 isFound = true;
+                progressBar.setVisibility(View.GONE);
             }
         }
         if (!isFound) {
+            progressBar.setVisibility(View.GONE);
             falseResultDialog.show();
         }
     }
 
     private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
+        boolean isFound = false;
         for (FirebaseVisionLabel label : firebaseVisionLabels) {
 //            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
-            if (label.getLabel().equals("Laptop")){
-                progressBar.setVisibility(View.VISIBLE);
-                setupTrueResultDialog("Laptop");
+            if (label.getLabel().equals(ANSWER)){
+                progressBar.setVisibility(View.GONE);
+                Log.d("HASIL", label.getLabel());
+                setupTrueResultDialog(ANSWER);
                 trueResultDialog.show();
-            }else{
-                falseResultDialog.show();
+                isFound = true;
+                progressBar.setVisibility(View.GONE);
             }
         }
-
+        if (!isFound) {
+            progressBar.setVisibility(View.GONE);
+            falseResultDialog.show();
+        }
     }
 
     private void setupTrueResultDialog(String result){
@@ -269,6 +286,11 @@ public class CameraViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 trueResultDialog.dismiss();
+                Intent intent = new Intent(getApplicationContext(),MoreInfoActivity.class);
+                intent.putExtra("STAGE_ID",STAGE_ID);
+                intent.putExtra("ANSWER",ANSWER);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -276,6 +298,11 @@ public class CameraViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 trueResultDialog.dismiss();
+                Intent intent = new Intent(getApplicationContext(),MoreInfoActivity.class);
+                intent.putExtra("STAGE_ID",STAGE_ID);
+                intent.putExtra("ANSWER",ANSWER);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -285,7 +312,18 @@ public class CameraViewActivity extends AppCompatActivity {
 
         falseResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        TextView tvOk = falseResultDialog.findViewById(R.id.dialogFalse_okTv);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                falseResultDialog.dismiss();
+                recreate();
+            }
+        });
     }
+
 
     private void setupTextToSpeechEnglish(){
         ttsEN = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -340,7 +378,7 @@ public class CameraViewActivity extends AppCompatActivity {
 
     }
 
-//    private void getStagesData(){
+    //    private void getStagesData(){
 //        DocumentReference docRef = ref.document("roleplace").collection("room").document("stage-1");
 //        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 //            @Override
