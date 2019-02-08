@@ -31,6 +31,7 @@ import com.mingle.sweetpick.CustomDelegate;
 import com.mingle.sweetpick.SweetSheet;
 import com.raion.snapventure.Auth.LoginActivity;
 import com.raion.snapventure.Data.User;
+import com.raion.snapventure.Helper.DatabaseHelper;
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.tmall.ultraviewpager.UltraViewPagerAdapter;
 import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
@@ -48,11 +49,24 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference collectionRef = db.collection("User");
 
     private String uid;
+    private DatabaseHelper db_sqlite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        db_sqlite = new DatabaseHelper(this);
+
+        db_sqlite.insertDataStage(0, "Easy 1", "Room", 1, 0, "You'll carry me if you have more money to bring", "Kamu akan membawa aku apabila kamu mempunyai uang lebih untuk dibawa", "Wallet");
+        db_sqlite.insertDataStage(1, "Easy 2", "Room", 1, 0, "They use me for writing on their paper with ink", "Mereka biasa menggunakanku untuk menulis dikertas dengan tinta", "Pen");
+        db_sqlite.insertDataStage(2, "Easy 3", "Room", 1, 0, "I'm like an animal, but i'm used beside a keyboard", "Aku seperti binatang, tetapi aku digunakan disebelah papan ketik", "Mouse");
+        db_sqlite.insertDataStage(3, "Medium 1", "Room", 1, 0, "Portable for typing with screen", "Mudah dibawa untuk mengetik dengan layar", "Laptop");
+        db_sqlite.insertDataStage(4, "Medium 2", "Room", 1, 0, "To Unlock something", "Untuk membuka sesuatu", "Key");
+        db_sqlite.insertDataStage(5, "Medium 3", "Room", 0, 0, null, null, null);
+        db_sqlite.insertDataStage(6, "Hard 1", "Room", 0, 0, null, null, null);
+        db_sqlite.insertDataStage(7, "Hard 2", "Room", 0, 0, null, null, null);
+
 
         layout = findViewById(R.id.mainLayout);
         btnDetect = findViewById(R.id.button_detect);
@@ -96,18 +110,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mSweetSheet.isShow()){
+        if (mSweetSheet.isShow()) {
             imgBackBlack.setVisibility(View.GONE);
             mSweetSheet.dismiss();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
 
-    private void setupRiddles(){
+    private void setupRiddles() {
         CustomDelegate customDelegate = new CustomDelegate(true,
                 CustomDelegate.AnimationType.DuangAnimation);
-        View view = LayoutInflater.from(this).inflate(R.layout.home_custom_sweet_sheet,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.home_custom_sweet_sheet, null);
         customDelegate.setCustomView(view);
         mSweetSheet.setDelegate(customDelegate);
 
@@ -116,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         view.findViewById(R.id.homeSweet_homeBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSweetSheet.isShow()){
+                if (mSweetSheet.isShow()) {
                     imgBackBlack.setVisibility(View.GONE);
                     mSweetSheet.dismiss();
                 }
@@ -131,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getUserData(final View view){
+    private void getUserData(final View view) {
         final TextView tvName = view.findViewById(R.id.homeSweet_namaTv);
         final TextView tvEnergy = view.findViewById(R.id.homeSweet_energyTv);
         final TextView tvPoint = view.findViewById(R.id.homeSweet_coinTv);
@@ -156,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void signOut(){
+    private void signOut() {
         mAuth.signOut();
         startActivity(new Intent(this, LoginActivity.class));
         finish();

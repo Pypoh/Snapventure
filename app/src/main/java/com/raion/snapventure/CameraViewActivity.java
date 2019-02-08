@@ -21,7 +21,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,8 +51,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 import java.util.Locale;
 
-
-public class CameraViewActivity extends AppCompatActivity{
+public class CameraViewActivity extends AppCompatActivity {
 
     CameraView cameraView;
     Button btnDetect,btnHint;
@@ -61,12 +59,15 @@ public class CameraViewActivity extends AppCompatActivity{
     RelativeLayout layout;
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
+    private String RIDDLE_EN, RIDDLE_ID, ANSWER;
     private TextToSpeech ttsEN,ttsID;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference ref = db.collection("Main");
+    TextView riddle_tv;
+
 
     private String en,id;
+
 
     @Override
     protected void onResume() {
@@ -106,6 +107,15 @@ public class CameraViewActivity extends AppCompatActivity{
         layout = findViewById(R.id.cameraLayout);
         progressBar = findViewById(R.id.camera_progressBar);
 
+
+        // Get Data
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            RIDDLE_EN = extras.getString("RIDDLE_EN");
+            RIDDLE_ID = extras.getString("RIDDLE_ID");
+            ANSWER = extras.getString("ANSWER");
+        }
+
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
         cameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
@@ -118,7 +128,7 @@ public class CameraViewActivity extends AppCompatActivity{
         setupFalseResultDialog();
         setupTextToSpeechEnglish();
         setupTextToSpeechIndonesia();
-        getStagesData();
+//        getStagesData();
         setupRiddles();
 
         cameraView.addCameraListener(new CameraListener() {
@@ -148,7 +158,8 @@ public class CameraViewActivity extends AppCompatActivity{
 //                tts.speak(text,TextToSpeech.QUEUE_FLUSH,null);
                 if (!mSweetSheet.isShow()){
                     mSweetSheet.show();
-                    ttsID.speak(id,TextToSpeech.QUEUE_FLUSH,null);
+                    riddle_tv.setText(RIDDLE_EN);
+                    ttsID.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
                 }else {
                     ttsID.stop();
                     ttsEN.stop();
@@ -213,17 +224,20 @@ public class CameraViewActivity extends AppCompatActivity{
     }
 
     private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
+        boolean isFound = false;
         for (FirebaseVisionCloudLabel label : firebaseVisionCloudLabels) {
 //            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
-            if (label.getLabel().equals("Laptop")){
+            if (label.getLabel().equals(ANSWER)){
                 progressBar.setVisibility(View.GONE);
-                setupTrueResultDialog("Laptop");
+                Log.d("HASIL", label.getLabel());
+                setupTrueResultDialog(ANSWER);
                 trueResultDialog.show();
-            }else{
-                falseResultDialog.show();
+                isFound = true;
             }
         }
-
+        if (!isFound) {
+            falseResultDialog.show();
+        }
     }
 
     private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
@@ -299,40 +313,49 @@ public class CameraViewActivity extends AppCompatActivity{
         CustomDelegate customDelegate = new CustomDelegate(true,
                 CustomDelegate.AnimationType.DuangAnimation);
         View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
+        riddle_tv = view.findViewById(R.id.hint_questionTv);
         customDelegate.setCustomView(view);
         mSweetSheet.setDelegate(customDelegate);
+
+
+        Log.d("riddle_TV", riddle_tv.getText().toString());
+        Log.d("riddle_ID", RIDDLE_ID);
+        Log.d("riddle_EN", RIDDLE_EN);
 
         Switch hintSwicth = view.findViewById(R.id.hint_switch);
         hintSwicth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
-                    ttsID.stop();
-                    ttsEN.speak(en,TextToSpeech.QUEUE_FLUSH,null);
-                }else{
+                    riddle_tv.setText(RIDDLE_ID);
                     ttsEN.stop();
-                    ttsID.speak(id,TextToSpeech.QUEUE_FLUSH,null);
+                    ttsID.speak(RIDDLE_ID,TextToSpeech.QUEUE_FLUSH,null);
+                }else{
+                    riddle_tv.setText(RIDDLE_EN);
+                    ttsID.stop();
+                    ttsEN.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
 
     }
 
-    private void getStagesData(){
-        DocumentReference docRef = ref.document("roleplace").collection("room").document("stage-1");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()){
-                        en = document.getString("en");
-                        id = document.getString("id");
+//    private void getStagesData(){
+//        DocumentReference docRef = ref.document("roleplace").collection("room").document("stage-1");
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()){
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()){
+//                        en = document.getString("en");
+//                        id = document.getString("id");
+//
+//                        Log.d("EN",en);
+//                    }
+//                }
+//            }
+//        });
+//    }
 
-                        Log.d("EN",en);
-                    }
-                }
-            }
-        });
-    }
 }

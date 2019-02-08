@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +19,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mingle.sweetpick.CustomDelegate;
 import com.mingle.sweetpick.SweetSheet;
+import com.raion.snapventure.Data.DataStage;
+import com.raion.snapventure.Data.DataUserStage;
+import com.raion.snapventure.Helper.DatabaseHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GardenStageActivity extends AppCompatActivity {
     private SweetSheet mSweetSheet;
@@ -24,28 +32,21 @@ public class GardenStageActivity extends AppCompatActivity {
     private Button btnDetect;
     private ImageView imgBackBlack;
     private CardView stage1;
+    private RecyclerView rv_stageItem;
+    private StageRVAdapter stageAdapter;
+    private List<DataUserStage> mDataStage = new ArrayList<>();
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    DatabaseHelper db_sqlite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_garden_stage);
-//        GridView gridview = (GridView) findViewById(R.id.gridview);
-//        gridview.setAdapter(new ImageAdapter(this));
-//
-//        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Toast.makeText(GardenStageActivity.this, "" + position, Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(getApplicationContext(),CameraViewActivity.class));
-//            }
-//        });
         layout = findViewById(R.id.stagesLayout);
         btnDetect = findViewById(R.id.stages_button_detect);
-        imgBackBlack = findViewById(R.id.stages_backBlackImg);
-        stage1 = findViewById(R.id.card1);
 
         mSweetSheet = new SweetSheet(layout);
         setupRiddles();
@@ -53,36 +54,32 @@ public class GardenStageActivity extends AppCompatActivity {
         btnDetect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imgBackBlack.setVisibility(View.VISIBLE);
                 mSweetSheet.show();
             }
         });
 
-        imgBackBlack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgBackBlack.setVisibility(View.GONE);
-            }
-        });
+        db_sqlite = new DatabaseHelper(this);
+        mDataStage.addAll(db_sqlite.getAllData());
 
-        stage1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), CameraViewActivity.class));
-            }
-        });
-
+        // Setup RecyclerView Stage Item
+        int numberOfColumns = 3;
+        rv_stageItem = findViewById(R.id.rv_stage);
+        rv_stageItem.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        stageAdapter = new StageRVAdapter(mDataStage, this);
+        rv_stageItem.setAdapter(stageAdapter);
     }
 
     @Override
     public void onBackPressed() {
         if (mSweetSheet.isShow()){
-            imgBackBlack.setVisibility(View.GONE);
+//            imgBackBlack.setVisibility(View.GONE);
             mSweetSheet.dismiss();
         }else {
             super.onBackPressed();
         }
     }
+
+
 
     private void setupRiddles(){
         CustomDelegate customDelegate = new CustomDelegate(true,
@@ -97,7 +94,7 @@ public class GardenStageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mSweetSheet.isShow()){
-                    imgBackBlack.setVisibility(View.GONE);
+//                    imgBackBlack.setVisibility(View.GONE);
                     mSweetSheet.dismiss();
                 }
             }
