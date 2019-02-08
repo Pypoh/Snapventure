@@ -72,6 +72,7 @@ public class StageRVAdapter extends RecyclerView.Adapter<StageRVAdapter.ViewHold
             v.setOnClickListener(this);
 
             _itemName = v.findViewById(R.id.item_level_name);
+            mCardView = v.findViewById(R.id.card_item);
 
         }
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,14 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel;
@@ -40,6 +49,7 @@ import com.raion.snapventure.Helper.InternetCheck;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CameraViewActivity extends AppCompatActivity {
 
@@ -50,6 +60,14 @@ public class CameraViewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
     private String RIDDLE_EN, RIDDLE_ID, ANSWER;
+    private TextToSpeech ttsEN,ttsID;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference ref = db.collection("Main");
+    TextView riddle_tv;
+
+
+    private String en,id;
+
 
     @Override
     protected void onResume() {
@@ -89,6 +107,7 @@ public class CameraViewActivity extends AppCompatActivity {
         layout = findViewById(R.id.cameraLayout);
         progressBar = findViewById(R.id.camera_progressBar);
 
+
         // Get Data
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -102,13 +121,15 @@ public class CameraViewActivity extends AppCompatActivity {
         cameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
         cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.CAPTURE); // Long tap to shoot!
 
+        falseResultDialog = new Dialog(this);
         trueResultDialog = new Dialog(this);
         mSweetSheet = new SweetSheet(layout);
-        CustomDelegate customDelegate = new CustomDelegate(true,
-                CustomDelegate.AnimationType.DuangAnimation);
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
-        customDelegate.setCustomView(view);
-        mSweetSheet.setDelegate(customDelegate);
+
+        setupFalseResultDialog();
+        setupTextToSpeechEnglish();
+        setupTextToSpeechIndonesia();
+//        getStagesData();
+        setupRiddles();
 
         cameraView.addCameraListener(new CameraListener() {
             @Override
@@ -134,14 +155,18 @@ public class CameraViewActivity extends AppCompatActivity {
         btnHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                tts.speak(text,TextToSpeech.QUEUE_FLUSH,null);
                 if (!mSweetSheet.isShow()){
                     mSweetSheet.show();
+                    riddle_tv.setText(RIDDLE_EN);
+                    ttsID.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
                 }else {
+                    ttsID.stop();
+                    ttsEN.stop();
                     mSweetSheet.dismiss();
                 }
             }
         });
-
 
     }
 
@@ -205,10 +230,10 @@ public class CameraViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 setupTrueResultDialog("Laptop");
                 trueResultDialog.show();
-
+            }else{
+                falseResultDialog.show();
             }
         }
-
     }
 
     private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
@@ -218,6 +243,8 @@ public class CameraViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 setupTrueResultDialog("Laptop");
                 trueResultDialog.show();
+            }else{
+                falseResultDialog.show();
             }
         }
 
@@ -255,5 +282,76 @@ public class CameraViewActivity extends AppCompatActivity {
         falseResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
+
+    private void setupTextToSpeechEnglish(){
+        ttsEN = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i != TextToSpeech.ERROR){
+                    ttsEN.setLanguage(new Locale("en","EN"));
+                }
+            }
+        });
+    }
+
+    private void setupTextToSpeechIndonesia(){
+        ttsID = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i != TextToSpeech.ERROR){
+                    ttsID.setLanguage(new Locale("id","ID"));
+                }
+            }
+        });
+    }
+
+    private void setupRiddles(){
+        CustomDelegate customDelegate = new CustomDelegate(true,
+                CustomDelegate.AnimationType.DuangAnimation);
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
+        riddle_tv = view.findViewById(R.id.hint_questionTv);
+        customDelegate.setCustomView(view);
+        mSweetSheet.setDelegate(customDelegate);
+
+
+        Log.d("riddle_TV", riddle_tv.getText().toString());
+        Log.d("riddle_ID", RIDDLE_ID);
+        Log.d("riddle_EN", RIDDLE_EN);
+
+        Switch hintSwicth = view.findViewById(R.id.hint_switch);
+        hintSwicth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    riddle_tv.setText(RIDDLE_ID);
+                    ttsEN.stop();
+                    ttsID.speak(RIDDLE_ID,TextToSpeech.QUEUE_FLUSH,null);
+                }else{
+                    riddle_tv.setText(RIDDLE_EN);
+                    ttsID.stop();
+                    ttsEN.speak(RIDDLE_EN,TextToSpeech.QUEUE_FLUSH,null);
+                }
+            }
+        });
+
+    }
+
+//    private void getStagesData(){
+//        DocumentReference docRef = ref.document("roleplace").collection("room").document("stage-1");
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()){
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()){
+//                        en = document.getString("en");
+//                        id = document.getString("id");
+//
+//                        Log.d("EN",en);
+//                    }
+//                }
+//            }
+//        });
+//    }
 
 }
