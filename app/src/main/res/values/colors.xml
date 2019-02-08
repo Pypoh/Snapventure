@@ -7,9 +7,13 @@
     <color name="colorAccentTransparent50">#80FEF208</color>
     <color name="grey">#F0F0F0</color>
     <color name="white">#FFFFFF</color>
+<<<<<<< HEAD
     <color name="black">#000000</color>
     <color name="black_transparent">#86000000</color>
     <color name="grey_transparent">#adececec</color>
     <color name="yellow">#FEF208</color>
     <color name="blue">#182A4E</color>
+=======
+    <color name="un">#ff8b90af</color>
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 </resources>

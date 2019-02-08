@@ -28,6 +28,8 @@ public class GardenStageActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private static final String KEY_STAGE = "garden";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +105,16 @@ public class GardenStageActivity extends AppCompatActivity {
             }
         });
 
+<<<<<<< HEAD
         view.findViewById(R.id.homeSweet_logoutBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                signOut();
             }
         });
+=======
+
+
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
     }
 }

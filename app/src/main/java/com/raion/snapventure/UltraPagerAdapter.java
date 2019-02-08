@@ -24,7 +24,11 @@ public class UltraPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
+<<<<<<< HEAD
         return 2;
+=======
+        return 3;
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
     }
 
     @Override
@@ -36,7 +40,23 @@ public class UltraPagerAdapter extends PagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(container.getContext()).inflate(R.layout.stages, null);
         //new LinearLayout(container.getContext());
+<<<<<<< HEAD
         TextView textView = linearLayout.findViewById(R.id.stage_text);
+=======
+        TextView textView = (TextView) linearLayout.findViewById(R.id.stage_text);
+
+        switch (position) {
+            case 0:
+                textView.setText("Garden");
+                break;
+            case 1:
+                textView.setText("Classroom");
+                break;
+            case 2:
+                textView.setText("House");
+                break;
+        }
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 
 
         setBackgroundFromPosition(position,linearLayout,textView);

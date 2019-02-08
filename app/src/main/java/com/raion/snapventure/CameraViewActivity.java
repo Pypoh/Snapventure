@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+=======
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +33,13 @@ import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
 import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
 import com.mingle.sweetpick.CustomDelegate;
+<<<<<<< HEAD
 import com.mingle.sweetpick.SweetSheet;
+=======
+import com.mingle.sweetpick.DimEffect;
+import com.mingle.sweetpick.SweetSheet;
+import com.mingle.sweetpick.ViewPagerDelegate;
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraUtils;
 import com.otaliastudios.cameraview.CameraView;
@@ -43,12 +53,23 @@ import java.util.List;
 
 public class CameraViewActivity extends AppCompatActivity {
 
+<<<<<<< HEAD
     CameraView cameraView;
     Button btnDetect,btnHint;
     SweetSheet mSweetSheet;
     RelativeLayout layout;
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
+=======
+    private CameraView cameraView;
+    private Button btnDetect, btnRiddle;
+    private SweetSheet riddleSheet;
+    private RelativeLayout relativeLayout;
+    private TextView riddleText;
+    private ConstraintLayout btnDetectLayout, btnRiddleLayout;
+
+    private String KEY_ANSWER = null;
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 
     @Override
     protected void onResume() {
@@ -84,11 +105,19 @@ public class CameraViewActivity extends AppCompatActivity {
 
         cameraView = findViewById(R.id.camera_view);
         btnDetect = findViewById(R.id.button_detect);
+<<<<<<< HEAD
         btnHint = findViewById(R.id.button_hint);
         layout = findViewById(R.id.cameraLayout);
         progressBar = findViewById(R.id.camera_progressBar);
 
         
+=======
+        relativeLayout = findViewById(R.id.relative_sheet);
+        btnRiddle = findViewById(R.id.button_riddle);
+
+        //Setup RiddleSheet
+        setupRiddle();
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
 
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
@@ -124,6 +153,7 @@ public class CameraViewActivity extends AppCompatActivity {
             }
         });
 
+<<<<<<< HEAD
         btnHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,11 +161,65 @@ public class CameraViewActivity extends AppCompatActivity {
                     mSweetSheet.show();
                 }else {
                     mSweetSheet.dismiss();
+=======
+        btnRiddle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (riddleSheet.isShow()) {
+                    riddleSheet.dismiss();
+                } else {
+                    riddleSheet.toggle();
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
                 }
             }
         });
 
+<<<<<<< HEAD
 
+=======
+//        btnDetectLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cameraView.start();
+//                cameraView.capturePicture();
+//            }
+//        });
+//
+//        btnRiddleLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (riddleSheet.isShow()) {
+//                    riddleSheet.dismiss();
+//                } else {
+//                    riddleSheet.toggle();
+//                }
+//            }
+//        });
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (riddleSheet.isShow()) {
+            riddleSheet.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void setupRiddle() {
+        riddleSheet = new SweetSheet(relativeLayout);
+
+        CustomDelegate customDelegate = new CustomDelegate(true, CustomDelegate.AnimationType.DuangLayoutAnimation);
+        View view = LayoutInflater.from(this).inflate(R.layout.riddle_sheet, null, false);
+        customDelegate.setCustomView(view);
+        riddleSheet.setDelegate(customDelegate);
+
+        riddleText = view.findViewById(R.id.text_riddle);
+
+        riddleText.setText("Ini Isinya nanti riddle");
+>>>>>>> f72e14337fb81ebc7895e28c2caa6f40dfc5666b
     }
 
     private void runDetector(Bitmap bitmap) {
@@ -193,59 +277,16 @@ public class CameraViewActivity extends AppCompatActivity {
 
     private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
         for (FirebaseVisionCloudLabel label : firebaseVisionCloudLabels) {
-//            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
-            if (label.getLabel().equals("Laptop")){
-                progressBar.setVisibility(View.GONE);
-                setupTrueResultDialog("Laptop");
-                trueResultDialog.show();
-            }
+            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
         for (FirebaseVisionLabel label : firebaseVisionLabels) {
-//            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
-            if (label.getLabel().equals("Laptop")){
-                progressBar.setVisibility(View.VISIBLE);
-                setupTrueResultDialog("Laptop");
-                trueResultDialog.show();
-            }
+            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    private void setupTrueResultDialog(String result){
-        trueResultDialog.setContentView(R.layout.dialog_jawaban_benar);
-
-        trueResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        trueResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TextView tvResult = trueResultDialog.findViewById(R.id.dialogTrue_resultTv);
-        TextView tvNext = trueResultDialog.findViewById(R.id.dialogTrue_nextTv);
-        ImageView imgNext = trueResultDialog.findViewById(R.id.dialogTrue_nextImg);
-
-        tvResult.setText(result);
-        imgNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                trueResultDialog.dismiss();
-            }
-        });
-
-        tvNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                trueResultDialog.dismiss();
-            }
-        });
-    }
-
-    private void setupFalseResultDialog(){
-        falseResultDialog.setContentView(R.layout.dialog_jawaban_salah);
-
-        falseResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
 }
