@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,14 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel;
@@ -40,8 +50,10 @@ import com.raion.snapventure.Helper.InternetCheck;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Locale;
 
-public class CameraViewActivity extends AppCompatActivity {
+
+public class CameraViewActivity extends AppCompatActivity{
 
     CameraView cameraView;
     Button btnDetect,btnHint;
@@ -49,6 +61,12 @@ public class CameraViewActivity extends AppCompatActivity {
     RelativeLayout layout;
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
+    private TextToSpeech ttsEN,ttsID;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference ref = db.collection("Main");
+
+    private String en,id;
 
     @Override
     protected void onResume() {
@@ -88,20 +106,20 @@ public class CameraViewActivity extends AppCompatActivity {
         layout = findViewById(R.id.cameraLayout);
         progressBar = findViewById(R.id.camera_progressBar);
 
-        
-
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
         cameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS_WITH_MARKER); // Tap to focus!
         cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.CAPTURE); // Long tap to shoot!
 
+        falseResultDialog = new Dialog(this);
         trueResultDialog = new Dialog(this);
         mSweetSheet = new SweetSheet(layout);
-        CustomDelegate customDelegate = new CustomDelegate(true,
-                CustomDelegate.AnimationType.DuangAnimation);
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
-        customDelegate.setCustomView(view);
-        mSweetSheet.setDelegate(customDelegate);
+
+        setupFalseResultDialog();
+        setupTextToSpeechEnglish();
+        setupTextToSpeechIndonesia();
+        getStagesData();
+        setupRiddles();
 
         cameraView.addCameraListener(new CameraListener() {
             @Override
@@ -127,14 +145,17 @@ public class CameraViewActivity extends AppCompatActivity {
         btnHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                tts.speak(text,TextToSpeech.QUEUE_FLUSH,null);
                 if (!mSweetSheet.isShow()){
                     mSweetSheet.show();
+                    ttsID.speak(id,TextToSpeech.QUEUE_FLUSH,null);
                 }else {
+                    ttsID.stop();
+                    ttsEN.stop();
                     mSweetSheet.dismiss();
                 }
             }
         });
-
 
     }
 
@@ -198,6 +219,8 @@ public class CameraViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 setupTrueResultDialog("Laptop");
                 trueResultDialog.show();
+            }else{
+                falseResultDialog.show();
             }
         }
 
@@ -210,6 +233,8 @@ public class CameraViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 setupTrueResultDialog("Laptop");
                 trueResultDialog.show();
+            }else{
+                falseResultDialog.show();
             }
         }
 
@@ -248,4 +273,66 @@ public class CameraViewActivity extends AppCompatActivity {
         falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
+    private void setupTextToSpeechEnglish(){
+        ttsEN = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i != TextToSpeech.ERROR){
+                    ttsEN.setLanguage(new Locale("en","EN"));
+                }
+            }
+        });
+    }
+
+    private void setupTextToSpeechIndonesia(){
+        ttsID = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i != TextToSpeech.ERROR){
+                    ttsID.setLanguage(new Locale("id","ID"));
+                }
+            }
+        });
+    }
+
+    private void setupRiddles(){
+        CustomDelegate customDelegate = new CustomDelegate(true,
+                CustomDelegate.AnimationType.DuangAnimation);
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.camera_custom_sweet_sheet,null);
+        customDelegate.setCustomView(view);
+        mSweetSheet.setDelegate(customDelegate);
+
+        Switch hintSwicth = view.findViewById(R.id.hint_switch);
+        hintSwicth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    ttsID.stop();
+                    ttsEN.speak(en,TextToSpeech.QUEUE_FLUSH,null);
+                }else{
+                    ttsEN.stop();
+                    ttsID.speak(id,TextToSpeech.QUEUE_FLUSH,null);
+                }
+            }
+        });
+
+    }
+
+    private void getStagesData(){
+        DocumentReference docRef = ref.document("roleplace").collection("room").document("stage-1");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        en = document.getString("en");
+                        id = document.getString("id");
+
+                        Log.d("EN",en);
+                    }
+                }
+            }
+        });
+    }
 }
