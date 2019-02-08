@@ -49,6 +49,7 @@ public class CameraViewActivity extends AppCompatActivity {
     RelativeLayout layout;
     private ProgressBar progressBar;
     private Dialog trueResultDialog,falseResultDialog;
+    private String RIDDLE_EN, RIDDLE_ID, ANSWER;
 
     @Override
     protected void onResume() {
@@ -88,7 +89,13 @@ public class CameraViewActivity extends AppCompatActivity {
         layout = findViewById(R.id.cameraLayout);
         progressBar = findViewById(R.id.camera_progressBar);
 
-        
+        // Get Data
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            RIDDLE_EN = extras.getString("RIDDLE_EN");
+            RIDDLE_ID = extras.getString("RIDDLE_ID");
+            ANSWER = extras.getString("ANSWER");
+        }
 
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM); // Pinch to zoom!
@@ -198,6 +205,7 @@ public class CameraViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 setupTrueResultDialog("Laptop");
                 trueResultDialog.show();
+
             }
         }
 
