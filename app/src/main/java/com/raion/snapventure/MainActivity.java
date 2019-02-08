@@ -21,6 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionRef = db.collection("User");
+    private DocumentReference documentReference;
+
+    private int stages_unlocked;
 
     private String uid;
     private DatabaseHelper db_sqlite;
@@ -58,14 +63,39 @@ public class MainActivity extends AppCompatActivity {
 
         db_sqlite = new DatabaseHelper(this);
 
-        db_sqlite.insertDataStage(0, "Easy 1", "Room", 1, 0, "You'll carry me if you have more money to bring", "Kamu akan membawa aku apabila kamu mempunyai uang lebih untuk dibawa", "Wallet");
-        db_sqlite.insertDataStage(1, "Easy 2", "Room", 1, 0, "They use me for writing on their paper with ink", "Mereka biasa menggunakanku untuk menulis dikertas dengan tinta", "Pen");
-        db_sqlite.insertDataStage(2, "Easy 3", "Room", 1, 0, "I'm like an animal, but i'm used beside a keyboard", "Aku seperti binatang, tetapi aku digunakan disebelah papan ketik", "Mouse");
-        db_sqlite.insertDataStage(3, "Medium 1", "Room", 1, 0, "Portable for typing with screen", "Mudah dibawa untuk mengetik dengan layar", "Laptop");
-        db_sqlite.insertDataStage(4, "Medium 2", "Room", 1, 0, "To Unlock something", "Untuk membuka sesuatu", "Key");
+        mAuth = FirebaseAuth.getInstance();
+        documentReference = collectionRef.document(mAuth.getCurrentUser().getUid());
+        uid = mAuth.getCurrentUser().getUid();
+
+        db_sqlite.insertDataStage(0, "Easy 1", "Room", 0, 0, "You'll carry me if you have more money to bring", "Kamu akan membawa aku apabila kamu mempunyai uang lebih untuk dibawa", "Wallet");
+        db_sqlite.insertDataStage(1, "Easy 2", "Room", 0, 0, "They use me for writing on their paper with ink", "Mereka biasa menggunakanku untuk menulis dikertas dengan tinta", "Pen");
+        db_sqlite.insertDataStage(2, "Easy 3", "Room", 0, 0, "I'm like an animal, but i'm used beside a keyboard", "Aku seperti binatang, tetapi aku digunakan disebelah papan ketik", "Mouse");
+        db_sqlite.insertDataStage(3, "Medium 1", "Room", 0, 0, "Portable for typing with screen", "Mudah dibawa untuk mengetik dengan layar", "Laptop");
+        db_sqlite.insertDataStage(4, "Medium 2", "Room", 0, 0, "To Unlock something", "Untuk membuka sesuatu", "Key");
         db_sqlite.insertDataStage(5, "Medium 3", "Room", 0, 0, null, null, null);
         db_sqlite.insertDataStage(6, "Hard 1", "Room", 0, 0, null, null, null);
         db_sqlite.insertDataStage(7, "Hard 2", "Room", 0, 0, null, null, null);
+
+
+        Log.d("stages_uid", uid);
+        documentReference.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        stages_unlocked = Integer.parseInt(String.valueOf(documentSnapshot.get("stages_unlocked")));
+                        Log.d("stages_unlocked", String.valueOf(stages_unlocked));
+                        for (int i = 0; i <= stages_unlocked; i++) {
+                            db_sqlite.setStageStatusByID(i, 1);
+                            Log.d("setstagestatus", i + " : 1" );
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("stages_error", e.toString());
+            }
+        });
+
 
 
         layout = findViewById(R.id.mainLayout);

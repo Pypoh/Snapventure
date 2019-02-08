@@ -62,6 +62,7 @@ public class StageRVAdapter extends RecyclerView.Adapter<StageRVAdapter.ViewHold
                 toCamera.putExtra("RIDDLE_EN", data.getRiddleEn());
                 toCamera.putExtra("RIDDLE_ID", data.getRiddleId());
                 toCamera.putExtra("ANSWER", data.getAnswer());
+                toCamera.putExtra("STAGE_ID", String.valueOf(data.getId()));
                 mContext.startActivity(toCamera);
             }
         });

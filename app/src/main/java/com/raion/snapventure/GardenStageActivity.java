@@ -67,6 +67,14 @@ public class GardenStageActivity extends AppCompatActivity {
         rv_stageItem.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         stageAdapter = new StageRVAdapter(mDataStage, this);
         rv_stageItem.setAdapter(stageAdapter);
+        stageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        stageAdapter.notifyDataSetChanged();
+
     }
 
     @Override
