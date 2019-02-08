@@ -224,15 +224,19 @@ public class CameraViewActivity extends AppCompatActivity {
     }
 
     private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
+        boolean isFound = false;
         for (FirebaseVisionCloudLabel label : firebaseVisionCloudLabels) {
 //            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
-            if (label.getLabel().equals("Laptop")){
+            if (label.getLabel().equals(ANSWER)){
                 progressBar.setVisibility(View.GONE);
-                setupTrueResultDialog("Laptop");
+                Log.d("HASIL", label.getLabel());
+                setupTrueResultDialog(ANSWER);
                 trueResultDialog.show();
-            }else{
-                falseResultDialog.show();
+                isFound = true;
             }
+        }
+        if (!isFound) {
+            falseResultDialog.show();
         }
     }
 

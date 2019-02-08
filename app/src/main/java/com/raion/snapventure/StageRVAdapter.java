@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raion.snapventure.Data.DataStage;
 import com.raion.snapventure.Data.DataUserStage;
@@ -37,6 +40,19 @@ public class StageRVAdapter extends RecyclerView.Adapter<StageRVAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final DataUserStage data = DataUserStage.get(position);
+
+        if (data.isStatus()) {
+            holder._disableView.setVisibility(View.GONE);
+        } else {
+            holder._disableView.setVisibility(View.VISIBLE);
+        }
+        Log.d("statusdata", String.valueOf(data.isStatus()));
+        holder._disableView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "Maaf dek belum dibuka", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         holder._itemName.setText(data.getDifficulty());
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
@@ -67,12 +83,14 @@ public class StageRVAdapter extends RecyclerView.Adapter<StageRVAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public CardView mCardView;
         public TextView _itemName;
+        private ImageView _disableView;
         public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
 
             _itemName = v.findViewById(R.id.item_level_name);
             mCardView = v.findViewById(R.id.card_item);
+            _disableView = v.findViewById(R.id.disable_view);
 
         }
 

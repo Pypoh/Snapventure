@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         db_sqlite = new DatabaseHelper(this);
 
-        db_sqlite.insertDataStage(0, "Easy 1", "Room", 0, 0, "You'll carry me if you have more money to bring", "Kamu akan membawa aku apabila kamu mempunyai uang lebih untuk dibawa", "Wallet");
-        db_sqlite.insertDataStage(1, "Easy 2", "Room", 0, 0, null, null, null);
-        db_sqlite.insertDataStage(2, "Easy 3", "Room", 0, 0, null, null, null);
-        db_sqlite.insertDataStage(3, "Medium 1", "Room", 0, 0, null, null, null);
-        db_sqlite.insertDataStage(4, "Medium 2", "Room", 0, 0, null, null, null);
+        db_sqlite.insertDataStage(0, "Easy 1", "Room", 1, 0, "You'll carry me if you have more money to bring", "Kamu akan membawa aku apabila kamu mempunyai uang lebih untuk dibawa", "Wallet");
+        db_sqlite.insertDataStage(1, "Easy 2", "Room", 1, 0, "They use me for writing on their paper with ink", "Mereka biasa menggunakanku untuk menulis dikertas dengan tinta", "Pen");
+        db_sqlite.insertDataStage(2, "Easy 3", "Room", 1, 0, "I'm like an animal, but i'm used beside a keyboard", "Aku seperti binatang, tetapi aku digunakan disebelah papan ketik", "Mouse");
+        db_sqlite.insertDataStage(3, "Medium 1", "Room", 1, 0, "Portable for typing with screen", "Mudah dibawa untuk mengetik dengan layar", "Laptop");
+        db_sqlite.insertDataStage(4, "Medium 2", "Room", 1, 0, "To Unlock something", "Untuk membuka sesuatu", "Key");
         db_sqlite.insertDataStage(5, "Medium 3", "Room", 0, 0, null, null, null);
         db_sqlite.insertDataStage(6, "Hard 1", "Room", 0, 0, null, null, null);
         db_sqlite.insertDataStage(7, "Hard 2", "Room", 0, 0, null, null, null);

@@ -33,8 +33,10 @@ public class DataUserStage {
         this.riddleEn = riddleEn;
         this.riddleId = riddleId;
         this.answer = answer;
-        this.status = status < 0;
-        this.point_status = point_status < 0;
+        if (status > 0) {
+            this.status = true;
+        }
+        this.point_status = point_status > 0;
     }
 
     public int getId() {
@@ -66,7 +68,7 @@ public class DataUserStage {
     }
 
     public void setStatus(int status) {
-        if (status < 0) {
+        if (status > 0) {
             this.status = true;
         } else {
             this.status = false;
