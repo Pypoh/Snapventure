@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
         String email = _inputEmail.getText().toString();
         String name = _inputName.getText().toString();
 
-        User userData = new User(email, name, 5, 0);
+        User userData = new User(email, name, 5, 0, 0);
 
         userRef.document(uid).set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

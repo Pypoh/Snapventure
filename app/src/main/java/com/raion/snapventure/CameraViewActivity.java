@@ -1,6 +1,7 @@
 package com.raion.snapventure;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -105,9 +106,15 @@ public class CameraViewActivity extends AppCompatActivity {
         if (mSweetSheet.isShow()){
             mSweetSheet.dismiss();
         }else {
-            super.onBackPressed();
+            startActivity(new Intent(getApplicationContext(),GardenStageActivity.class));
+            finish();
         }
 
+    }
+
+    @Override
+    public void recreate() {
+        super.recreate();
     }
 
     @Override
@@ -188,7 +195,7 @@ public class CameraViewActivity extends AppCompatActivity {
 
     }
 
-    private void runDetector(Bitmap bitmap) {
+    private void runDetector(final Bitmap bitmap) {
         progressBar.setVisibility(View.VISIBLE);
         final FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
 
@@ -207,7 +214,8 @@ public class CameraViewActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionCloudLabel>>() {
                                 @Override
                                 public void onSuccess(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
-                                    processDataResultCloud(firebaseVisionCloudLabels);
+                                    Log.d("Bitmap",String.valueOf(bitmap));
+                                    processDataResultCloud(firebaseVisionCloudLabels, bitmap);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -227,7 +235,7 @@ public class CameraViewActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionLabel>>() {
                                 @Override
                                 public void onSuccess(List<FirebaseVisionLabel> firebaseVisionLabels) {
-                                    processDataResult(firebaseVisionLabels);
+                                    processDataResult(firebaseVisionLabels, bitmap);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -241,17 +249,16 @@ public class CameraViewActivity extends AppCompatActivity {
 
     }
 
-    private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
+    private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels, Bitmap bitmap) {
         boolean isFound = false;
         for (FirebaseVisionCloudLabel label : firebaseVisionCloudLabels) {
 //            Toast.makeText(this, "Cloud Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
             if (label.getLabel().equals(ANSWER)){
                 progressBar.setVisibility(View.GONE);
                 Log.d("HASIL", label.getLabel());
-                setupTrueResultDialog(ANSWER);
+                setupTrueResultDialog(ANSWER,bitmap);
                 trueResultDialog.show();
                 isFound = true;
-                getMoreInfoByID(STAGE_ID);
                 updateIncreaseStage();
             }
         }
@@ -282,31 +289,12 @@ public class CameraViewActivity extends AppCompatActivity {
 
     }
 
-    private void getMoreInfoByID(String id) {
-        DocumentReference documentReference = ref.document(id);
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Toast.makeText(CameraViewActivity.this, documentSnapshot.getString(KEY_MORE_INFO), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(CameraViewActivity.this, "Data Not Found", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-    }
-
-    private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels) {
+    private void processDataResult(List<FirebaseVisionLabel> firebaseVisionLabels, Bitmap bitmap) {
         for (FirebaseVisionLabel label : firebaseVisionLabels) {
 //            Toast.makeText(this, "Device Result : " + label.getLabel(), Toast.LENGTH_SHORT).show();
             if (label.getLabel().equals("Laptop")){
                 progressBar.setVisibility(View.VISIBLE);
-                setupTrueResultDialog("Laptop");
+                setupTrueResultDialog("Laptop",bitmap);
                 trueResultDialog.show();
             }else{
                 falseResultDialog.show();
@@ -315,7 +303,7 @@ public class CameraViewActivity extends AppCompatActivity {
 
     }
 
-    private void setupTrueResultDialog(String result){
+    private void setupTrueResultDialog(String result, final Bitmap bitmap){
         trueResultDialog.setContentView(R.layout.dialog_jawaban_benar);
 
         trueResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -323,6 +311,7 @@ public class CameraViewActivity extends AppCompatActivity {
 
         TextView tvResult = trueResultDialog.findViewById(R.id.dialogTrue_resultTv);
         TextView tvNext = trueResultDialog.findViewById(R.id.dialogTrue_nextTv);
+        TextView tvMoreInfo = trueResultDialog.findViewById(R.id.dialogTrue_moreInfoTv);
         ImageView imgNext = trueResultDialog.findViewById(R.id.dialogTrue_nextImg);
 
         tvResult.setText(result);
@@ -330,6 +319,8 @@ public class CameraViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 trueResultDialog.dismiss();
+                startActivity(new Intent(getApplicationContext(),GardenStageActivity.class));
+                finish();
             }
         });
 
@@ -337,15 +328,41 @@ public class CameraViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 trueResultDialog.dismiss();
+                startActivity(new Intent(getApplicationContext(),GardenStageActivity.class));
+                finish();
+            }
+        });
+
+        tvMoreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toMoreInfo = new Intent(getApplicationContext(),MoreInfoActivity.class);
+                toMoreInfo.putExtra("STAGE_ID",STAGE_ID);
+                toMoreInfo.putExtra("ANSWER",ANSWER);
+                toMoreInfo.putExtra("bitmap", bitmap);
+                startActivity(toMoreInfo);
+                finish();
             }
         });
     }
+
+
 
     private void setupFalseResultDialog(){
         falseResultDialog.setContentView(R.layout.dialog_jawaban_salah);
 
         falseResultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         falseResultDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        TextView tvOk = falseResultDialog.findViewById(R.id.dialogFalse_okTv);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                falseResultDialog.dismiss();
+                recreate();
+            }
+        });
     }
 
     private void setupTextToSpeechEnglish(){

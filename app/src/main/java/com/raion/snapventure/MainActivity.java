@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private SweetSheet mSweetSheet;
     private RelativeLayout layout;
     private Button btnDetect;
-    private ImageView imgBackBlack;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         layout = findViewById(R.id.mainLayout);
         btnDetect = findViewById(R.id.button_detect);
         ultraViewPager = findViewById(R.id.menu_stage);
-        imgBackBlack = findViewById(R.id.home_backBlackImg);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
 
         //Initialize UltraPagerAdapter
@@ -118,15 +116,7 @@ public class MainActivity extends AppCompatActivity {
         btnDetect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imgBackBlack.setVisibility(View.VISIBLE);
                 mSweetSheet.show();
-            }
-        });
-
-        imgBackBlack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgBackBlack.setVisibility(View.GONE);
             }
         });
 
@@ -141,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mSweetSheet.isShow()) {
-            imgBackBlack.setVisibility(View.GONE);
             mSweetSheet.dismiss();
         } else {
             super.onBackPressed();
@@ -161,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mSweetSheet.isShow()) {
-                    imgBackBlack.setVisibility(View.GONE);
                     mSweetSheet.dismiss();
                 }
             }
